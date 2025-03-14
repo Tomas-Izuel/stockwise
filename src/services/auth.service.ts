@@ -35,6 +35,14 @@ export class AuthService {
     return { user, token };
   }
 
+  async getProfile(userId: string) {
+    const user = await User.findById(userId).select("-password"); // Excluimos el password
+    if (!user) {
+      throw new Error("Usuario no encontrado");
+    }
+    return user;
+  }
+
   private async generateToken(user: any) {
     const payload = {
       sub: user._id,
