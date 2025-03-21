@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const trackerSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   type: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "TrackerType",
@@ -8,7 +13,7 @@ const trackerSchema = new mongoose.Schema({
   },
   assets: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "TrackerAsset",
+    ref: "Asset",
     required: true,
   },
 });

@@ -5,7 +5,9 @@ const SECRET_KEY = process.env.JWT_SECRET || "tu-clave-secreta";
 
 export class AuthService {
   async register(userData: { email: string; password: string; name: string }) {
-    const existingUser = await User.findOne({ email: userData.email });
+    const existingUser = await User.findOne({
+      email: userData.email,
+    }).select("-password");
     if (existingUser) {
       throw new Error("Usuario ya existe");
     }
@@ -16,12 +18,15 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const token = await this.generateToken(user);
-    return { user, token };
+    const userWithoutPassword = await User.findById(user._id).select(
+      "-password"
+    );
+    const token = await this.generateToken(userWithoutPassword);
+    return { user: userWithoutPassword, token };
   }
 
   async login(email: string, password: string) {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("-password");
     if (!user) {
       throw new Error("Usuario no encontrado");
     }

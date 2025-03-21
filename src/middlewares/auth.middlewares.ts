@@ -11,7 +11,7 @@ export async function authMiddleware(c: Context, next: Next) {
     }
 
     const payload = await verify(token, SECRET_KEY);
-    c.set("user", payload);
+    c.set("jwtPayload", payload);
     await next();
   } catch (error) {
     return c.json({ message: "Token inválido" }, 401);
